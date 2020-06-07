@@ -1,7 +1,7 @@
 /**
  * A library allowing to directly communicate with the backend by using variables in the HTML.
  * @author SMJS
- * @version 1.0.0
+ * @version 1.1.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -53,17 +53,21 @@ module.exports = class HTCMLBuilder {
      * @returns {HTCMLBuilder} The class will be returned for inline purposes.
      */
     build() {
-        this.variables.forEach((variable) => {
-            let output = "";
+        try {
+            this.variables.forEach((variable) => {
+                let output = "";
 
-            if (typeof variable.call == "function") {
-                output = (variable.call(variable.objectParameter) || "").toString();
-            } else {
-                output = (variable.call || "").toString();
-            }
+                if (typeof variable.call == "function") {
+                    output = (variable.call(variable.objectParameter) || "").toString();
+                } else {
+                    output = (variable.call || "").toString();
+                }
 
-            this.page = this.page.replace(`$%${variable.raw}%;`, output);
-        });
+                this.page = this.page.replace(`$%${variable.raw}%;`, output);
+            });
+        } catch(error) {
+            this.error = error;
+        }
         
         return this;
     }
@@ -88,7 +92,6 @@ module.exports = class HTCMLBuilder {
                     };
                 });
         } catch(error) {
-            this.page = "";
             this.error = error;
         }
     }
