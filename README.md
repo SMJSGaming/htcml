@@ -40,7 +40,7 @@ module.exports.init = (object) => object.entry1 + object.entry2;
 
 ```js
 const fs = require("fs");
-const HTCML = require("HTCML");
+const htcml = require("htcml");
 
 // The raw HTCML which should be parsed to HTML.
 const rawPage = fs.readFileSync("./page.html", "utf8");
@@ -52,7 +52,7 @@ const componentRoot = "./components";
 const inDirectory = false;
 
 // The HTCML class will be constructed and can inline be build. An alternative is to construct the class and modify the variables or page before building it.
-const result = new HTCML(rawPage, componentRoot, inDirectory).build();
+const result = new htcml(rawPage, componentRoot, inDirectory).build();
 ```
 
 ### Page

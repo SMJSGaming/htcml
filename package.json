@@ -1,6 +1,6 @@
 {
   "name": "htcml",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A library allowing to directly communicate with the backend by using variables in the HTML.",
   "main": "HTCMLBuilder.js",
   "scripts": {},
@@ -18,7 +18,6 @@
     "url": "https://github.com/SMJSGaming/htcml/issues",
     "email": "smjsgaming@gmail.com"
   },
-  "homepage": "https://github.com/SMJSGaming/htcml",
   "author": "SMJS",
   "license": "MIT",
   "dependencies": {}
