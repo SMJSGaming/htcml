@@ -1,0 +1,16 @@
+{
+  "name": "htcml",
+  "version": "1.0.1",
+  "description": "A library allowing to directly communicate with the backend by using variables in the HTML.",
+  "main": "HTCMLBuilder.js",
+  "scripts": {},
+  "keywords": [
+    "HTCML",
+    "HTML",
+    "web",
+    "page rendering"
+  ],
+  "author": "SMJS",
+  "license": "MIT",
+  "dependencies": {}
+}
