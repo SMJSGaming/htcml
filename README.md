@@ -78,7 +78,7 @@ console.log(result.error || result.variables);
 
 ### Conventions
 
-- If you provide an object to a component call it's expected that no `)` is anywhere in the object.
+- If you provide an object to a component call it's expected that no `)%;` is anywhere in the object.
 - When you set the `inDirectory` to true it's expected that the component file is located in a directory with the same name as the component (so `example1.js` should be in `example1`).
 - It's expected that the component route is relative to the process root just like how `fs` works.
 - A backend call does not require returning anything and will make the spot of the call empty if no return value was provided.

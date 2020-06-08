@@ -1,7 +1,9 @@
 /**
  * A library allowing to directly communicate with the backend by using variables in the HTML.
+ * 
+ * Quite frankly you can basically use this on all files but lets just assume you use it for its purpose.
  * @author SMJS
- * @version 1.1.0
+ * @version 1.2.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -79,14 +81,18 @@ module.exports = class HTCMLBuilder {
         try {
             this.variables = this.page.split("$%")
                 .slice(1)
-                .map((variable) => variable.split("%;")[0])
                 .map((variable) => {
                     const splitObject = variable.split("(");
 
+                    if (splitObject[0].includes("%;")) {
+                        splitObject[0] = splitObject[0].split("%;")[0];
+                    }
+
                     return {
-                        raw: variable,
+                        raw: variable.split("%;")[0],
                         component: splitObject[0],
-                        objectParameter: JSON.parse((splitObject[1] || "").split(")")[0] || null),
+                        objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
+                        // @ts-ignore since vsc doesn't like single file projects which use require in any way with checkJs
                         call: require.main.require(
                             this.#root + `/${splitObject[0]}`.repeat(+this.#inDirectory + 1)).init
                     };
