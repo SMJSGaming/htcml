@@ -51,8 +51,12 @@ const componentRoot = "./components";
 // Whether the components are located in directories withing the components folder.
 const inDirectory = false;
 
-// The HTCML class will be constructed and can inline be build. An alternative is to construct the class and modify the variables or page before building it.
-const result = new htcml(rawPage, componentRoot, inDirectory).build();
+/*
+  The HTCML class will be constructed and can inline be build.
+  An alternative is to construct the class and modify the variables or page before building it.
+  After building it the object will async be returned to make sure that async components are supported.
+*/
+new htcml(rawPage, componentRoot, inDirectory).build().then((result) => /* Use the result */);
 ```
 
 ### Page

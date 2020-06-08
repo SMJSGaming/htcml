@@ -3,7 +3,7 @@
  * 
  * Quite frankly you can basically use this on all files but lets just assume you use it for its purpose.
  * @author SMJS
- * @version 1.2.0
+ * @version 1.3.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -52,21 +52,22 @@ module.exports = class HTCMLBuilder {
 
     /**
      * Builds the page with the provided variables.
-     * @returns {HTCMLBuilder} The class will be returned for inline purposes.
+     * @returns {Promise<HTCMLBuilder>} The class will be returned for inline purposes.
      */
-    build() {
+    async build() {
         try {
-            this.variables.forEach((variable) => {
+            for (let i = 0; i < this.variables.length; i++) {
                 let output = "";
 
-                if (typeof variable.call == "function") {
-                    output = (variable.call(variable.objectParameter) || "").toString();
+                if (typeof this.variables[i].call == "function") {
+                    output = (await this.variables[i].call(
+                        this.variables[i].objectParameter) || "").toString();
                 } else {
-                    output = (variable.call || "").toString();
+                    output = (this.variables[i].call || "").toString();
                 }
 
-                this.page = this.page.replace(`$%${variable.raw}%;`, output);
-            });
+                this.page = this.page.replace(`$%${this.variables[i].raw}%;`, output);
+            };
         } catch(error) {
             this.error = error;
         }

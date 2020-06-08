@@ -1,7 +1,7 @@
 /**
  * A test script to validate that the update gives the right data.
  * @author SMJS
- * @version 1.0.0
+ * @version 1.1.0
  */
 module.exports.init = "test";
 
@@ -19,7 +19,6 @@ const expected = {
     ]
 };
 const HTCMLBuilder = require("./HTCMLBuilder");
-const result = new HTCMLBuilder(testHtml, ".", false).build();
 const InvalidException = class {
 
     constructor(objectChild, expected, given) {
@@ -32,14 +31,16 @@ const InvalidException = class {
     error = "";
 };
 
-if (result.page == expected.page) {
-    if (JSON.stringify(result.variables) == JSON.stringify(expected.variables)) {
-        console.log("Success!");
+new HTCMLBuilder(testHtml, ".", false).build().then((result) => {
+    if (result.page == expected.page) {
+        if (JSON.stringify(result.variables) == JSON.stringify(expected.variables)) {
+            console.log("Success!");
+        } else {
+            throw new InvalidException(
+                "variables", expected.variables, result.variables).error;
+        }
     } else {
-        throw new InvalidException(
-            "variables", expected.variables, result.variables).error;
+        throw result.error || 
+            new InvalidException("page", expected.page, result.page).error;
     }
-} else {
-    throw result.error || 
-        new InvalidException("page", expected.page, result.page).error;
-}
+});
