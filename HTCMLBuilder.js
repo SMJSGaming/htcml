@@ -1,7 +1,7 @@
 /**
  * A library allowing to directly communicate with the backend by using variables in the HTML. 
  * @author SMJS
- * @version 1.4.0
+ * @version 2.0.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -102,20 +102,31 @@ module.exports = class HTCMLBuilder {
      * Parses the variables on the page and sets the variable array with all info about the variable.
      */
     #parseVariables = () => {
-        this.variables = this.page.split("$%")
-            .slice(1)
-            .map((variable) => {
-                const splitObject = variable.split("(");
+        try {
+            this.variables = this.page.split("$%")
+                .slice(1)
+                .map((variable) => {
+                    const splitObject = variable.split("(");
 
-                splitObject[0] = splitObject[0].split("%;")[0].split(".js")[0];
+                    splitObject[0] = splitObject[0].split("%;")[0]
+                        .replace(".json", "")
+                        .replace(".js", "");
+                    
+                    const objectNavigation = splitObject[0].split(".");
+                    let call = require.main.require(this.#root + `/${objectNavigation.shift()}`
+                        .repeat(+this.#inDirectory + 1)).init;
 
-                return {
-                    raw: variable.split("%;")[0],
-                    component: splitObject[0],
-                    objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
-                    call: require.main.require(
-                        this.#root + `/${splitObject[0]}`.repeat(+this.#inDirectory + 1)).init
-                };
-            });
+                    objectNavigation.forEach((key) => call = call[key]);
+
+                    return {
+                        raw: variable.split("%;")[0],
+                        component: splitObject[0],
+                        objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
+                        call
+                    };
+                });
+        } catch(error) {
+            this.error = error;
+        }
     }
 };

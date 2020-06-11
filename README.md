@@ -34,6 +34,17 @@ Path: ./components/example2.json
 module.exports.init = (object) => object.entry1 + object.entry2;
 ```
 
+### Nested component variable
+
+```js
+// Path: ./components/example4.js
+module.exports.init = [
+  {
+    "a-variable": "example"
+  }
+]
+```
+
 ### HTCML calls
 
 ```html
@@ -44,7 +55,8 @@ module.exports.init = (object) => object.entry1 + object.entry2;
     entry1: "exam",
     entry2: "ple"
 })%;</p>
-<!-- Returns example 3 times -->
+<p>$%example4.0.a-variable%;</p>
+<!-- Returns example 4 times -->
 ```
 
 ### Initialize
