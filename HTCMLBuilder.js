@@ -113,7 +113,6 @@ module.exports = class HTCMLBuilder {
                     raw: variable.split("%;")[0],
                     component: splitObject[0],
                     objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
-                    // @ts-ignore since vsc doesn't like single file projects which use require in any way with checkJs
                     call: require.main.require(
                         this.#root + `/${splitObject[0]}`.repeat(+this.#inDirectory + 1)).init
                 };

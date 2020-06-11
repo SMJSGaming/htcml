@@ -19,8 +19,9 @@ module.exports.init = "example";
 
 ### Json component variable
 
+Path: ./components/example2.json
+
 ```json
-// Path: ./components/example2.json
 {
   "init": "example"
 }
