@@ -67,7 +67,7 @@ const inDirectory = false;
   An alternative is to construct the class and modify the variables or page before building it.
   After building it the object will be returned.
 */
-const result = new htcml(rawPage, componentRoot, inDirectory).build()
+const result = new htcml(rawPage, componentRoot, inDirectory).build();
 
 // An alternative in case asynchronous objects need to be used.
 new htcml(rawPage, componentRoot, inDirectory).asyncBuild().then((result) => /* Use the result */);
