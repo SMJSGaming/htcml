@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2020",
-        "checkJs": true
+        "checkJs": true,
+        "resolveJsonModule": true
     }
 }

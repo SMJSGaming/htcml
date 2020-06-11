@@ -1,9 +1,7 @@
 /**
- * A library allowing to directly communicate with the backend by using variables in the HTML.
- * 
- * Quite frankly you can basically use this on all files but lets just assume you use it for its purpose.
+ * A library allowing to directly communicate with the backend by using variables in the HTML. 
  * @author SMJS
- * @version 1.3.0
+ * @version 1.4.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -52,11 +50,36 @@ module.exports = class HTCMLBuilder {
 
     /**
      * Builds the page with the provided variables.
-     * @returns {Promise<HTCMLBuilder>} The class will be returned for inline purposes.
+     * @returns {HTCMLBuilder} The class will be returned for inline purposes.
      */
-    async build() {
+    build() {
         try {
-            for (let i = 0; i < this.variables.length; i++) {
+            this.variables.forEach((variable) => {
+                let output = "";
+
+                if (typeof variable.call == "function") {
+                    output = (variable.call(variable.objectParameter) || "").toString();
+                } else {
+                    output = (variable.call || "").toString();
+                }
+
+                this.page = this.page.replace(`$%${variable.raw}%;`, output);
+            });
+        } catch(error) {
+            this.error = error;
+        }
+        
+        return this;
+    }
+
+    /**
+     * Builds the page with the provided variables with asynchronous support.
+     * @returns {Promise<HTCMLBuilder>} The class will be returned through a promise for inline purposes.
+     */
+    async asyncBuild() {
+        // I wish I could make this a method I could call for both build and asyncBuild but the asynchronous features are too mixed up to make that work.
+        try {
+            for (let i in this.variables) {
                 let output = "";
 
                 if (typeof this.variables[i].call == "function") {
@@ -71,7 +94,7 @@ module.exports = class HTCMLBuilder {
         } catch(error) {
             this.error = error;
         }
-        
+
         return this;
     }
 
@@ -79,27 +102,21 @@ module.exports = class HTCMLBuilder {
      * Parses the variables on the page and sets the variable array with all info about the variable.
      */
     #parseVariables = () => {
-        try {
-            this.variables = this.page.split("$%")
-                .slice(1)
-                .map((variable) => {
-                    const splitObject = variable.split("(");
+        this.variables = this.page.split("$%")
+            .slice(1)
+            .map((variable) => {
+                const splitObject = variable.split("(");
 
-                    if (splitObject[0].includes("%;")) {
-                        splitObject[0] = splitObject[0].split("%;")[0];
-                    }
+                splitObject[0] = splitObject[0].split("%;")[0].split(".js")[0];
 
-                    return {
-                        raw: variable.split("%;")[0],
-                        component: splitObject[0],
-                        objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
-                        // @ts-ignore since vsc doesn't like single file projects which use require in any way with checkJs
-                        call: require.main.require(
-                            this.#root + `/${splitObject[0]}`.repeat(+this.#inDirectory + 1)).init
-                    };
-                });
-        } catch(error) {
-            this.error = error;
-        }
+                return {
+                    raw: variable.split("%;")[0],
+                    component: splitObject[0],
+                    objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
+                    // @ts-ignore since vsc doesn't like single file projects which use require in any way with checkJs
+                    call: require.main.require(
+                        this.#root + `/${splitObject[0]}`.repeat(+this.#inDirectory + 1)).init
+                };
+            });
     }
 };

@@ -17,10 +17,19 @@ You can trigger a component by calling `$%componentName%;` in case you want to c
 module.exports.init = "example";
 ```
 
+### Json component variable
+
+```json
+// Path: ./components/example2.json
+{
+  "init": "example"
+}
+```
+
 ### Component function
 
 ```js
-// Path: ./components/example2.js
+// Path: ./components/example3.js
 module.exports.init = (object) => object.entry1 + object.entry2;
 ```
 
@@ -29,11 +38,12 @@ module.exports.init = (object) => object.entry1 + object.entry2;
 ```html
 <!-- Path: ./page.html -->
 <p>$%example1%;</p>
-<p>$%example2({
+<p>$%example2.json%;</p>
+<p>$%example3({
     entry1: "exam",
     entry2: "ple"
 })%;</p>
-<!-- Returns example 2 times -->
+<!-- Returns example 3 times -->
 ```
 
 ### Initialize
@@ -54,9 +64,12 @@ const inDirectory = false;
 /*
   The HTCML class will be constructed and can inline be build.
   An alternative is to construct the class and modify the variables or page before building it.
-  After building it the object will async be returned to make sure that async components are supported.
+  After building it the object will be returned.
 */
-new htcml(rawPage, componentRoot, inDirectory).build().then((result) => /* Use the result */);
+const result = new htcml(rawPage, componentRoot, inDirectory).build()
+
+// An alternative in case asynchronous objects need to be used.
+new htcml(rawPage, componentRoot, inDirectory).asyncBuild().then((result) => /* Use the result */);
 ```
 
 ### Page
@@ -85,4 +98,10 @@ console.log(result.error || result.variables);
 - If you provide an object to a component call it's expected that no `)%;` is anywhere in the object.
 - When you set the `inDirectory` to true it's expected that the component file is located in a directory with the same name as the component (so `example1.js` should be in `example1`).
 - It's expected that the component route is relative to the process root just like how `fs` works.
+- When calling a JSON component it's required that you add `.json` behind the call.
+
+### Exceptions
+
 - A backend call does not require returning anything and will make the spot of the call empty if no return value was provided.
+- You can provide the filetype behind a call.
+- HTCML can be initialized on any string, it does not per se have to be a HTML string.

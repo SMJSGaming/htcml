@@ -1,10 +1,10 @@
 {
   "name": "htcml",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A library allowing to directly communicate with the backend by using variables in the HTML.",
   "main": "HTCMLBuilder.js",
   "scripts": {
-    "prepublishOnly": "node test.js"
+    "prepublishOnly": "node tests/startTests.js"
   },
   "keywords": [
     "HTML",
