@@ -1,33 +1,24 @@
 const call = (object) => object.param1 + object.param2;
+const objectParameter = {
+    param1: "te",
+    param2: "st"
+};
 
 module.exports = {
     init: call,
-    test: class TestSyncMethod {
+    test: class TestSyncMethod extends require("../CreateExpectedData") {
 
         constructor(component) {
-            const objectParameter = {
-                param1: "te",
-                param2: "st"
-            };
-            const raw = `${component}(${JSON.stringify(objectParameter)})`;
-            const page = `<p>${objectParameter.param1 + objectParameter.param2}</p>`;
-            const givenPage = `<p>$%${raw}%;</p>`;
-            component = component.split(".js")[0];
-            const expected = {
-                variables: [
-                    {
-                        raw,
-                        component,
-                        objectParameter,
-                        call
-                    }
-                ],
-                page
-            };
+            super(component,
+                `(${JSON.stringify(objectParameter)})`,
+                objectParameter,
+                call,
+                `<p>${objectParameter.param1 + objectParameter.param2}</p>`,
+                1);
 
             this.check = {
-                result: new this.#HTCMLBuilder(givenPage, "./modules", false).build(),
-                expected
+                result: new this.#HTCMLBuilder(this.givenPage, "./modules", false).build(),
+                expected: this.expected
             };
         }
 

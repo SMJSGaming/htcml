@@ -1,29 +1,15 @@
+const call = require("./testData/testJson.json").init;
+
 module.exports = {
-    test: class TestJson {
+    test: class TestJson extends require("../CreateExpectedData") {
 
         constructor(component) {
-            const call = require("./testData/testJson.json").init;
-            const objectParameter = null;
-            const raw = 
-                component.charAt(0).toLowerCase() + component.slice(1).replace(".js", ".json");
-            const page = `<p>${call}</p>`;
-            const givenPage = `<p>$%${raw}%;</p>`;
-            component = raw.split(".json")[0];
-            const expected = {
-                variables: [
-                    {
-                        raw,
-                        component,
-                        objectParameter,
-                        call
-                    }
-                ],
-                page
-            };
+            super(component, "", null, call, `<p>${call}</p>`, 1);
 
             this.check = {
-                result: new this.#HTCMLBuilder(givenPage, "./modules/testData", false).build(),
-                expected
+                result: new this.#HTCMLBuilder(
+                    this.givenPage, "./modules/testData", false).build(),
+                expected: this.expected
             };
         }
 

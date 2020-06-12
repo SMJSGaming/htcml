@@ -1,7 +1,7 @@
 /**
  * A library allowing to directly communicate with the backend by using variables in the HTML. 
  * @author SMJS
- * @version 2.0.0
+ * @version 2.0.1
  */
 module.exports = class HTCMLBuilder {
 
@@ -120,7 +120,7 @@ module.exports = class HTCMLBuilder {
 
                     return {
                         raw: variable.split("%;")[0],
-                        component: splitObject[0],
+                        component: splitObject[0].split(".")[0],
                         objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
                         call
                     };

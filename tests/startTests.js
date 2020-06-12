@@ -1,10 +1,12 @@
 /**
  * A test script to validate that the update gives the right data.
  * @author SMJS
- * @version 2.0.0
+ * @version 2.1.0
  */
 const fs = require("fs");
 const InvalidException = require("./exceptions/InvalidException");
+const DifferentLengthExceptions = 
+    require("./exceptions/DifferentLengthExceptions");
 
 fs.readdir("./tests/modules", async (error, files) => {
     let check = {};
@@ -31,10 +33,15 @@ fs.readdir("./tests/modules", async (error, files) => {
 function validateTree(expected, result, root, page) {
     Object.keys(expected).forEach((key) => {
         if (typeof expected[key] == "object" && expected[key] != null) {
+            if (/^\d+$/.test(key) && expected.length != result.length) {
+                throw new DifferentLengthExceptions(root,
+                    expected.length,
+                    result.length,
+                    page);
+            }
             validateTree(expected[key], result[key], addKey(root, key), page);
         } else if (expected[key] != result[key]) {
-            throw new InvalidException(
-                addKey(root, key), expected[key], result[key], page).error;
+            throw new InvalidException(addKey(root, key), expected[key], result[key], page);
         }
     });
 }

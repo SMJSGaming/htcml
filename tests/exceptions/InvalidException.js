@@ -1,12 +1,9 @@
-module.exports = class InvalidException {
+module.exports = class InvalidException extends Error {
 
     constructor(objectChild, expected, given, page) {
-        const exp = `${typeof expected}:${JSON.stringify(expected)}`;
-        const giv = `${typeof given}:${JSON.stringify(given)}`;
-        
-        this.error = 
-            `Invalid ${objectChild} output at ${page}. Expected: ${exp}, Given: ${giv}`;
-    }
+        super(`Invalid ${objectChild} output at ${page}. Expected: ${
+            typeof expected}:${expected}, Given: ${typeof given}:${given}`);
 
-    error = "";
+        this.name = "Invalid output exception";
+    }
 };

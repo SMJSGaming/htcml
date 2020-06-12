@@ -2,35 +2,14 @@ const call = "test";
 
 module.exports = {
     init: call,
-    test: class TestMultiVariables {
+    test: class TestMultiVariables extends require("../CreateExpectedData") {
 
         constructor(component) {
-            const objectParameter = null;
-            const raw = component;
-            const page = `<p>${call} ${call}</p>`;
-            const givenPage = `<p>$%${raw}%; $%${raw}%;</p>`;
-            component = component.split(".js")[0];
-            const expected = {
-                variables: [
-                    {
-                        raw,
-                        component,
-                        objectParameter,
-                        call
-                    },
-                    {
-                        raw,
-                        component,
-                        objectParameter,
-                        call
-                    }
-                ],
-                page
-            };
+            super(component, "", null, call, `<p>${call.repeat(2)}</p>`, 2);
 
             this.check = {
-                result: new this.#HTCMLBuilder(givenPage, "./modules", false).build(),
-                expected
+                result: new this.#HTCMLBuilder(this.givenPage, "./modules", false).build(),
+                expected: this.expected
             };
         }
 

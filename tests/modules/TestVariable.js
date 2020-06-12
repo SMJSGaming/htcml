@@ -2,29 +2,14 @@ const call = "test";
 
 module.exports = {
     init: call,
-    test: class TestVariable {
+    test: class TestVariable extends require("../CreateExpectedData") {
 
         constructor(component) {
-            const objectParameter = null;
-            const raw = component;
-            const page = `<p>${call}</p>`;
-            const givenPage = `<p>$%${raw}%;</p>`;
-            component = component.split(".js")[0];
-            const expected = {
-                variables: [
-                    {
-                        raw,
-                        component,
-                        objectParameter,
-                        call
-                    }
-                ],
-                page
-            };
+            super(component, "", null, call, `<p>${call}</p>`, 1);
 
             this.check = {
-                result: new this.#HTCMLBuilder(givenPage, "./modules", false).build(),
-                expected
+                result: new this.#HTCMLBuilder(this.givenPage, "./modules", false).build(),
+                expected: this.expected
             };
         }
 
