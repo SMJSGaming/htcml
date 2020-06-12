@@ -7,17 +7,10 @@ module.exports = {
             super(component, "", null, call, `<p>${call}</p>`, 1);
 
             this.check = {
-                result: new this.#HTCMLBuilder(
+                result: new this.HTCMLBuilder(
                     this.givenPage, "./modules/testData", true).build(),
                 expected: this.expected
             };
         }
-
-        #HTCMLBuilder = require("../../HTCMLBuilder");
-
-        check = {
-            result: undefined,
-            expected: undefined
-        };
     }
 };

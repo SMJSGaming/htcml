@@ -1,7 +1,7 @@
 /**
  * A test script to validate that the update gives the right data.
  * @author SMJS
- * @version 2.1.0
+ * @version 2.1.1
  */
 const fs = require("fs");
 const InvalidException = require("./exceptions/InvalidException");

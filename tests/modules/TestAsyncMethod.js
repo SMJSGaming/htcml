@@ -16,15 +16,11 @@ module.exports = {
                 `<p>${objectParameter.param1 + objectParameter.param2}</p>`,
                 1);
 
-            this.check = new this.#HTCMLBuilder(this.givenPage, "./modules", false).asyncBuild()
+            this.check = new this.HTCMLBuilder(this.givenPage, "./modules", false).asyncBuild()
                 .then((result) => ({
                     result,
                     expected: this.expected
                 }));
         }
-
-        #HTCMLBuilder = require("../../HTCMLBuilder");
-
-        check = undefined;
     }
 };

@@ -8,16 +8,9 @@ module.exports = {
             super(component, "", null, call, `<p>${call.repeat(2)}</p>`, 2);
 
             this.check = {
-                result: new this.#HTCMLBuilder(this.givenPage, "./modules", false).build(),
+                result: new this.HTCMLBuilder(this.givenPage, "./modules", false).build(),
                 expected: this.expected
             };
         }
-
-        #HTCMLBuilder = require("../../HTCMLBuilder");
-
-        check = {
-            result: undefined,
-            expected: undefined
-        };
     }
 };
