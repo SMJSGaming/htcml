@@ -1,6 +1,6 @@
 # HTCML
 
-A library allowing to directly communicate with the backend by using variables in the HTML.
+A library made to directly communicate with the backend by using variables in the HTML.
 
 ## Installing
 

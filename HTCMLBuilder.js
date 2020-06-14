@@ -1,15 +1,15 @@
 /**
- * A library allowing to directly communicate with the backend by using variables in the HTML. 
+ * A library made to directly communicate with the backend by using variables in the HTML. 
  * @author SMJS
- * @version 2.0.1
+ * @version 2.0.2
  */
 module.exports = class HTCMLBuilder {
 
     /**
      * The class constructor.
      * @param {String} html The raw HTML page.
-     * @param {String} componentRoot The route towards the components folder based on the application root.
-     * @param {Boolean} inDirectory A boolean telling the script if the component is in a sub directory or in the main one. 
+     * @param {String} componentRoot The root towards the components folder based on the application root.
+     * @param {Boolean} inDirectory A boolean telling the script if the component is in a sub directory or in the provided root. 
      */
     constructor(html, componentRoot, inDirectory) {
         this.page = html;
@@ -25,7 +25,7 @@ module.exports = class HTCMLBuilder {
     variables = [];
     
     /**
-     * The page result page.
+     * The return page.
      * @type {String}
      */
     page = "";
@@ -120,8 +120,9 @@ module.exports = class HTCMLBuilder {
 
                     return {
                         raw: variable.split("%;")[0],
-                        component: splitObject[0].split(".")[0],
-                        objectParameter: JSON.parse((splitObject[1] || "").split(")%;")[0] || null),
+                        component: splitObject.shift().split(".")[0],
+                        objectParameter: JSON.parse(
+                            (splitObject.join("(") || "").split(")%;")[0] || null),
                         call
                     };
                 });
