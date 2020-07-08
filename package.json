@@ -1,6 +1,6 @@
 {
   "name": "htcml",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "A library made to directly communicate with the backend by using variables in the HTML.",
   "main": "HTCMLBuilder.js",
   "scripts": {

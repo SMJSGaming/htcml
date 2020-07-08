@@ -1,7 +1,7 @@
 /**
  * A library made to directly communicate with the backend by using variables in the HTML. 
  * @author SMJS
- * @version 2.0.2
+ * @version 2.1.0
  */
 module.exports = class HTCMLBuilder {
 
@@ -54,17 +54,10 @@ module.exports = class HTCMLBuilder {
      */
     build() {
         try {
-            this.variables.forEach((variable) => {
-                let output = "";
-
-                if (typeof variable.call == "function") {
-                    output = (variable.call(variable.objectParameter) || "").toString();
-                } else {
-                    output = (variable.call || "").toString();
-                }
-
-                this.page = this.page.replace(`$%${variable.raw}%;`, output);
-            });
+            this.variables.forEach((variable) => this.page = this.page.replace(
+                `$%${variable.raw}%;`, 
+                (this.#getCall(variable) || "").toString()
+            ));        
         } catch(error) {
             this.error = error;
         }
@@ -80,16 +73,10 @@ module.exports = class HTCMLBuilder {
         // I wish I could make this a method I could call for both build and asyncBuild but the asynchronous features are too mixed up to make that work.
         try {
             for (let i in this.variables) {
-                let output = "";
-
-                if (typeof this.variables[i].call == "function") {
-                    output = (await this.variables[i].call(
-                        this.variables[i].objectParameter) || "").toString();
-                } else {
-                    output = (this.variables[i].call || "").toString();
-                }
-
-                this.page = this.page.replace(`$%${this.variables[i].raw}%;`, output);
+                this.page = this.page.replace(
+                    `$%${this.variables[i].raw}%;`,
+                    (await this.#getCall(this.variables[i]) || "").toString()
+                );
             };
         } catch(error) {
             this.error = error;
@@ -103,26 +90,21 @@ module.exports = class HTCMLBuilder {
      */
     #parseVariables = () => {
         try {
-            this.variables = this.page.split("$%")
+            this.variables = this.page
+                .split("$%")
                 .slice(1)
                 .map((variable) => {
-                    const splitObject = variable.split("(");
+                    const raw = variable.split("%;")[0];
+                    const objectNavigation = raw.replace(/.js(on)?/, "").split(".");
+                    const component = objectNavigation.shift().split("(")[0];
+                    let call = require.main.require(this.#root + `/${component}`.repeat(+this.#inDirectory + 1)).init;
 
-                    splitObject[0] = splitObject[0].split("%;")[0]
-                        .replace(".json", "")
-                        .replace(".js", "");
-                    
-                    const objectNavigation = splitObject[0].split(".");
-                    let call = require.main.require(this.#root + `/${objectNavigation.shift()}`
-                        .repeat(+this.#inDirectory + 1)).init;
-
-                    objectNavigation.forEach((key) => call = call[key]);
+                    objectNavigation.forEach((key) => call = call[key.split("(")[0]]);
 
                     return {
-                        raw: variable.split("%;")[0],
-                        component: splitObject.shift().split(".")[0],
-                        objectParameter: JSON.parse(
-                            (splitObject.join("(") || "").split(")%;")[0] || null),
+                        raw,
+                        component,
+                        objectParameter: JSON.parse(raw.split("(").slice(1).join("(").split(")").slice(0, -1).join(")") || null),
                         call
                     };
                 });
@@ -130,4 +112,16 @@ module.exports = class HTCMLBuilder {
             this.error = error;
         }
     }
-};
+
+    #getCall = (variable) => {
+        try {
+            if (typeof variable.call == "function") {
+                return variable.call(variable.objectParameter);
+            } else {
+                return variable.call;
+            }
+        } catch(error) {
+            this.error = error;
+        }
+    }
+}
